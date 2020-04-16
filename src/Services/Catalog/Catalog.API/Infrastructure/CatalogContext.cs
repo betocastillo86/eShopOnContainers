@@ -13,12 +13,14 @@
         public DbSet<CatalogItem> CatalogItems { get; set; }
         public DbSet<CatalogBrand> CatalogBrands { get; set; }
         public DbSet<CatalogType> CatalogTypes { get; set; }
+        public DbSet<Comment> Comments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfiguration(new CatalogBrandEntityTypeConfiguration());
             builder.ApplyConfiguration(new CatalogTypeEntityTypeConfiguration());
             builder.ApplyConfiguration(new CatalogItemEntityTypeConfiguration());
+            builder.ApplyConfiguration(new CommentEntityTypeConfiguration());
         }     
     }
 
