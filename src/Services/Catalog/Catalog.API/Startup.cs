@@ -28,6 +28,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using RabbitMQ.Client;
+using Shop.Common.Infrastrucutre;
 using System;
 using System.Data.Common;
 using System.IO;
@@ -230,6 +231,7 @@ namespace Microsoft.eShopOnContainers.Services.Catalog.API
 
         public static IServiceCollection AddCustomOptions(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddTransient<IIdentityService, IdentityService>();
             services.Configure<CatalogSettings>(configuration);
             services.Configure<ApiBehaviorOptions>(options =>
             {
