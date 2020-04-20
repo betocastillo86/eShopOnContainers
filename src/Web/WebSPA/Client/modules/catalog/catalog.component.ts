@@ -11,6 +11,7 @@ import { ICatalogBrand }        from '../shared/models/catalogBrand.model';
 import { IPager }               from '../shared/models/pager.model';
 import { BasketWrapperService}  from '../shared/services/basket.wrapper.service';
 import { SecurityService }      from '../shared/services/security.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'esh-catalog .esh-catalog',
@@ -28,7 +29,12 @@ export class CatalogComponent implements OnInit {
     authSubscription: Subscription;
     errorReceived: boolean;
 
-    constructor(private service: CatalogService, private basketService: BasketWrapperService, private configurationService: ConfigurationService, private securityService: SecurityService) {
+    constructor(
+        private service: CatalogService, 
+        private basketService: BasketWrapperService, 
+        private configurationService: ConfigurationService, 
+        private securityService: SecurityService,
+        private router: Router) {
         this.authenticated = securityService.IsAuthorized;
     }
 
@@ -110,6 +116,10 @@ export class CatalogComponent implements OnInit {
             let allBrands = { id: null, brand: 'All' };
             this.brands.unshift(allBrands);
         });
+    }
+
+    details(item: ICatalogItem):void {
+        this.router.navigate(['catalog', item.id]);
     }
 
     private handleError(error: any) {

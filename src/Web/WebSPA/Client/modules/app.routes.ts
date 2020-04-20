@@ -7,16 +7,18 @@ import { OrdersDetailComponent } from './orders/orders-detail/orders-detail.comp
 import { OrdersNewComponent } from './orders/orders-new/orders-new.component';
 import { CampaignsComponent } from './campaigns/campaigns.component';
 import { CampaignsDetailComponent } from './campaigns/campaigns-detail/campaigns-detail.component';
+import { CatalogDetailComponent } from './catalog/catalog-detail/catalog-detail.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'catalog', pathMatch: 'full' },
     { path: 'basket', component: BasketComponent },
     { path: 'catalog', component: CatalogComponent },
+    { path: 'catalog/:id', component: CatalogDetailComponent },
     { path: 'orders', component: OrdersComponent },
     { path: 'orders/:id', component: OrdersDetailComponent },
     { path: 'order', component: OrdersNewComponent },
     { path: 'campaigns', component: CampaignsComponent },
-    { path: 'campaigns/:id', component: CampaignsDetailComponent }
+    { path: 'campaigns/:id', component: CampaignsDetailComponent },
 ];
 
 export const routing = RouterModule.forRoot(routes);

@@ -35,6 +35,9 @@
                 <button [ngClass]="{'esh-catalog-button': true, 'is-disabled': !authenticated}" (click)="addToCart(item)">
                     [ ADD TO CART ]
                 </button>
+                <button (click)="details(item)">
+                    Details
+                </button>
 
                 <div class="esh-catalog-name">
                     <span>{{item.name}}</span>

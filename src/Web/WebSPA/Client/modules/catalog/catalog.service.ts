@@ -8,6 +8,7 @@ import { ICatalogType } from '../shared/models/catalogType.model';
 
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { ICatalogItem } from '../shared/models/catalogItem.model';
 
 @Injectable()
 export class CatalogService {
@@ -36,6 +37,18 @@ export class CatalogService {
         url = url + '?pageIndex=' + pageIndex + '&pageSize=' + pageSize;
 
         return this.service.get(url).pipe<ICatalog>(tap((response: any) => {
+            return response;
+        }));
+    }
+
+    getCatalogById(itemId: number): Observable<ICatalogItem> {
+        let url = this.catalogUrl;
+
+        url = url + '/' + itemId;
+        
+        console.log("Before calling", url);
+
+        return this.service.get(url).pipe<ICatalogItem>(tap((response: any) => {
             return response;
         }));
     }
