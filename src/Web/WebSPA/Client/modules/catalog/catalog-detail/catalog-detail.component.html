@@ -14,5 +14,13 @@
     <section>
         <h2>Comments</h2>
     </section>
+    <ul *ngIf="comments">
+        <li *ngFor="let comment of comments.data">
+            {{comment.creationDate}}: {{comment.text}}
+        </li>
+    </ul>
+
+
+
 </div>
 
