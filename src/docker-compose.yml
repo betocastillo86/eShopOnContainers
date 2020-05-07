@@ -43,6 +43,7 @@ services:
     depends_on:
       - sqldata
       - rabbitmq
+      - identity-api
 
   ordering-api:
     image: ${REGISTRY:-eshop}/ordering.api:${PLATFORM:-linux}-${TAG:-latest}

@@ -26,11 +26,12 @@ namespace Microsoft.eShopOnContainers.Services.Identity.API.Data
             clientUrls.Add("MarketingApi", configuration.GetValue<string>("MarketingApiClient"));
             clientUrls.Add("BasketApi", configuration.GetValue<string>("BasketApiClient"));
             clientUrls.Add("OrderingApi", configuration.GetValue<string>("OrderingApiClient"));
+            clientUrls.Add("CatalogApi", configuration.GetValue<string>("CatalogApiClient"));
             clientUrls.Add("MobileShoppingAgg", configuration.GetValue<string>("MobileShoppingAggClient"));
             clientUrls.Add("WebShoppingAgg", configuration.GetValue<string>("WebShoppingAggClient"));
             clientUrls.Add("WebhooksApi", configuration.GetValue<string>("WebhooksApiClient"));
             clientUrls.Add("WebhooksWeb", configuration.GetValue<string>("WebhooksWebClient"));
-
+            
             if (!context.Clients.Any())
             {
                 foreach (var client in Config.GetClients(clientUrls))

@@ -19,6 +19,7 @@ namespace Microsoft.eShopOnContainers.Services.Identity.API.Configuration
                 new ApiResource("webshoppingagg", "Web Shopping Aggregator"),
                 new ApiResource("orders.signalrhub", "Ordering Signalr Hub"),
                 new ApiResource("webhooks", "Webhooks registration Service"),
+                new ApiResource("catalog", "Catalog Service")
             };
         }
 
@@ -59,7 +60,8 @@ namespace Microsoft.eShopOnContainers.Services.Identity.API.Configuration
                         "marketing",
                         "webshoppingagg",
                         "orders.signalrhub",
-                        "webhooks"
+                        "webhooks",
+                        "catalog"
                     },
                 },
                 new Client
@@ -87,7 +89,8 @@ namespace Microsoft.eShopOnContainers.Services.Identity.API.Configuration
                         "locations",
                         "marketing",
                         "mobileshoppingagg",
-                        "webhooks"
+                        "webhooks",
+                        "catalog"
                     },
                     //Allow requesting refresh tokens for long lived API access
                     AllowOfflineAccess = true,
@@ -126,7 +129,8 @@ namespace Microsoft.eShopOnContainers.Services.Identity.API.Configuration
                         "marketing",
                         "webshoppingagg",
                         "orders.signalrhub",
-                        "webhooks"
+                        "webhooks",
+                        "catalog"
                     },
                     AccessTokenLifetime = 60*60*2, // 2 hours
                     IdentityTokenLifetime= 60*60*2 // 2 hours
@@ -194,7 +198,8 @@ namespace Microsoft.eShopOnContainers.Services.Identity.API.Configuration
                         "locations",
                         "marketing",
                         "webshoppingagg",
-                        "webhooks"
+                        "webhooks",
+                        "catalog"
                     },
                 },
                 new Client
@@ -301,6 +306,21 @@ namespace Microsoft.eShopOnContainers.Services.Identity.API.Configuration
                     AllowedScopes =
                     {
                         "webhooks"
+                    }
+                },
+                new Client
+                {
+                    ClientId = "catalogswaggerui",
+                    ClientName = "Catalog Service Swagger UI",
+                    AllowedGrantTypes = GrantTypes.Implicit,
+                    AllowAccessTokensViaBrowser = true,
+
+                    RedirectUris = { $"{clientsUrl["CatalogApi"]}/swagger/oauth2-redirect.html" },
+                    PostLogoutRedirectUris = { $"{clientsUrl["CatalogApi"]}/swagger/" },
+
+                    AllowedScopes =
+                    {
+                        "catalog"
                     }
                 }
             };

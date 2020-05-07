@@ -71,6 +71,7 @@ namespace Catalog.API.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult> CreateComment(int itemId, [FromBody]Comment model)

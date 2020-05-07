@@ -4,6 +4,7 @@ using Catalog.API.Grpc;
 using global::Catalog.API.Infrastructure.Filters;
 using global::Catalog.API.IntegrationEvents;
 using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
@@ -30,7 +31,9 @@ using Microsoft.OpenApi.Models;
 using RabbitMQ.Client;
 using Shop.Common.Infrastrucutre;
 using System;
+using System.Collections.Generic;
 using System.Data.Common;
+using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Reflection;
 
@@ -55,7 +58,8 @@ namespace Microsoft.eShopOnContainers.Services.Catalog.API
                 .AddIntegrationServices(Configuration)
                 .AddEventBus(Configuration)
                 .AddSwagger(Configuration)
-                .AddCustomHealthCheck(Configuration);
+                .AddCustomHealthCheck(Configuration)
+                .AddCustomAuthentication(Configuration);
 
             var container = new ContainerBuilder();
             container.Populate(services);
@@ -78,14 +82,16 @@ namespace Microsoft.eShopOnContainers.Services.Catalog.API
                 app.UsePathBase(pathBase);
             }
 
-            app.UseSwagger()
+            /*app.UseSwagger()
              .UseSwaggerUI(c =>
              {
                  c.SwaggerEndpoint($"{ (!string.IsNullOrEmpty(pathBase) ? pathBase : string.Empty) }/swagger/v1/swagger.json", "Catalog.API V1");
-             });
+             });*/
 
             app.UseCors("CorsPolicy");
             app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
@@ -229,6 +235,26 @@ namespace Microsoft.eShopOnContainers.Services.Catalog.API
             return services;
         }
 
+        public static IServiceCollection AddCustomAuthentication(this IServiceCollection services, IConfiguration configuration)
+        {
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
+
+            var identityUrl = configuration.GetValue<string>("urls:identity");
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.Authority = identityUrl;
+                options.RequireHttpsMetadata = false;
+                options.Audience = "catalog";
+            });
+
+            return services;
+        }
+
         public static IServiceCollection AddCustomOptions(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddTransient<IIdentityService, IdentityService>();
@@ -256,7 +282,8 @@ namespace Microsoft.eShopOnContainers.Services.Catalog.API
 
         public static IServiceCollection AddSwagger(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddSwaggerGen(options =>
+            // TODO: Add swagger with authentication
+            /*services.AddSwaggerGen(options =>
             {
                 options.DescribeAllEnumsAsStrings();
                 options.SwaggerDoc("v1", new OpenApiInfo
@@ -265,7 +292,26 @@ namespace Microsoft.eShopOnContainers.Services.Catalog.API
                     Version = "v1",
                     Description = "The Catalog Microservice HTTP API. This is a Data-Driven/CRUD microservice sample"
                 });
-            });
+
+                options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.OAuth2,
+                    Flows = new OpenApiOAuthFlows()
+                    {
+                        Implicit = new OpenApiOAuthFlow()
+                        {
+                            AuthorizationUrl = new Uri($"{configuration.GetValue<string>("IdentityUrlExternal")}/connect/authorize"),
+                            TokenUrl = new Uri($"{configuration.GetValue<string>("IdentityUrlExternal")}/connect/token"),
+
+                            Scopes = new Dictionary<string, string>()
+                            {
+                                { "catalog", "Catalog for Web Clients" }
+                            }
+                        }
+                    }
+                });
+
+            });*/
 
             return services;
 
