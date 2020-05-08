@@ -82,11 +82,13 @@ namespace Microsoft.eShopOnContainers.Services.Catalog.API
                 app.UsePathBase(pathBase);
             }
 
-            /*app.UseSwagger()
+            app.UseSwagger()
              .UseSwaggerUI(c =>
              {
                  c.SwaggerEndpoint($"{ (!string.IsNullOrEmpty(pathBase) ? pathBase : string.Empty) }/swagger/v1/swagger.json", "Catalog.API V1");
-             });*/
+                 c.OAuthClientId("catalogswaggerui");
+                 c.OAuthAppName("Catalog Service Swagger UI");
+             });
 
             app.UseCors("CorsPolicy");
             app.UseRouting();
@@ -282,8 +284,7 @@ namespace Microsoft.eShopOnContainers.Services.Catalog.API
 
         public static IServiceCollection AddSwagger(this IServiceCollection services, IConfiguration configuration)
         {
-            // TODO: Add swagger with authentication
-            /*services.AddSwaggerGen(options =>
+            services.AddSwaggerGen(options =>
             {
                 options.DescribeAllEnumsAsStrings();
                 options.SwaggerDoc("v1", new OpenApiInfo
@@ -292,7 +293,6 @@ namespace Microsoft.eShopOnContainers.Services.Catalog.API
                     Version = "v1",
                     Description = "The Catalog Microservice HTTP API. This is a Data-Driven/CRUD microservice sample"
                 });
-
                 options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.OAuth2,
@@ -311,7 +311,8 @@ namespace Microsoft.eShopOnContainers.Services.Catalog.API
                     }
                 });
 
-            });*/
+                options.OperationFilter<AuthorizeCheckOperationFilter>();
+            });
 
             return services;
 
