@@ -1,5 +1,6 @@
 export interface IComment
 {
+    itemId: number;
     text: string;
-    creationDate: string;
+    creationDate: string | null;
 }

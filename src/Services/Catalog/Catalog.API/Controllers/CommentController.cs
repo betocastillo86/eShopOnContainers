@@ -5,6 +5,7 @@ using Microsoft.eShopOnContainers.Services.Catalog.API.Infrastructure;
 using Microsoft.eShopOnContainers.Services.Catalog.API.Model;
 using Microsoft.eShopOnContainers.Services.Catalog.API.ViewModel;
 using Shop.Common.Infrastrucutre;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -17,10 +18,14 @@ namespace Catalog.API.Controllers
     public class CommentController : ControllerBase
     {
         private readonly CatalogContext context;
+        private readonly IIdentityService identityService;
 
-        public CommentController(CatalogContext context)
+        public CommentController(
+            CatalogContext context,
+            IIdentityService identityService)
         {
             this.context = context;
+            this.identityService = identityService;
         }
 
         [HttpGet]
@@ -80,7 +85,8 @@ namespace Catalog.API.Controllers
             {
                 CatalogItemId = itemId,
                 Text = model.Text,
-                UserId = model.UserId
+                UserId = this.identityService.GetUserIdentity(),
+                CreationDate = DateTime.Now
             };
 
             this.context.Comments.Add(item);
