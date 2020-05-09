@@ -12,9 +12,10 @@ export class CommentService {
     private catalogUrl: string = '';
     
     constructor(private service: DataService, private configurationService: ConfigurationService) {
-        this.configurationService.settingsLoaded$.subscribe(x => {
+        if (this.configurationService.isReady)
             this.catalogUrl = this.configurationService.serverSettings.purchaseUrl + '/c/api/v1/catalog/items';
-        });
+        else
+            this.configurationService.settingsLoaded$.subscribe(x => this.catalogUrl = this.configurationService.serverSettings.purchaseUrl + '/c/api/v1/catalog/items');
     }
 
     getComments(itemId: number): Observable<ICommentList>{
